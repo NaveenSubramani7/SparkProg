@@ -1,0 +1,15 @@
+from pyspark import SparkConf
+from pyspark.context import SparkContext
+
+sc = SparkContext.getOrCreate(SparkConf())
+data = sc.textFile("file:///home/hduser/test.csv")
+
+
+def add_eligibilty_flag(x):
+    if int(x[3]) > 18:
+        x.insert(len(x),"True")
+    else:
+        x.insert(len(x), "false")
+    return x
+data1 = data.map(lambda x:x.split(",")).map(lambda x: (add_eligibilty_flag(x)))
+print(data1.collect())
